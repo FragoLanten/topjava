@@ -47,13 +47,17 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         List<UserMealWithExcess> list = new ArrayList<>();
-        Map<Integer,Integer> dayMap = new HashMap<>();
-        meals.forEach((meal)->dayMap.merge(meal.getDateTime().getDayOfMonth(), meal.getCalories(), Integer::sum));
+        Map<Integer,Integer> caloriesSumByDate = new HashMap<>();
+        meals.forEach((meal)->caloriesSumByDate.merge(meal.getDateTime().getDayOfMonth(), meal.getCalories(), Integer::sum));
         meals.forEach((meal)->{
             if (meal.getDateTime().toLocalTime().isAfter(startTime)&&(meal.getDateTime().toLocalTime().isBefore(endTime))) {
-                list.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), caloriesPerDay<dayMap.get(meal.getDateTime().getDayOfMonth())));
+                list.add(createTo(meal, caloriesSumByDate.get(meal.getDateTime().getDayOfMonth()) > caloriesPerDay));;
             }
         });
         return list;
+    }
+
+    private static UserMealWithExcess createTo(UserMeal meal, boolean excess) {
+        return new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 }
