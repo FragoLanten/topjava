@@ -30,6 +30,7 @@
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
 
+            <td><a href="delete?id=<c:out value="${meal.mealId}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 
