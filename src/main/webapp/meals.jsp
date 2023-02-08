@@ -4,13 +4,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="ru">
 <head>
-    <title>Users</title>
+    <title>Meal List</title>
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
-<hr>
+
 <h2>Meals</h2>
 
+<a href="AddOrEditMeal.jsp">Добавить прием пищи</a>
+<br>
+<br>
 <table border="1" rules="all" cellpadding="5">
     <tr >
         <th>Date</th>
@@ -29,8 +32,8 @@
             <td>${meal.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-
-            <td><a href="delete?id=<c:out value="${meal.mealId}"/>">Delete</a></td>
+            <td><a href="MealServlet?action=edit&id=<c:out value="${meal.mealId}"/>">Edit</a></td>
+            <td><a href="MealServlet?action=delete&id=<c:out value="${meal.mealId}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 

@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@WebServlet("/MealServlet")
 public class MealServlet extends HttpServlet {
 
     private static final Logger log = getLogger(UserServlet.class);
@@ -34,13 +36,21 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to users");
 
-//        String action = request.getParameter("action");
-//
-//        if (action.equalsIgnoreCase("delete")) {
-//            int mealId = Integer.parseInt(request.getParameter("mealId"));
-//            MealTo meal = mealDao.getMealById(mealId);
-//            mealDao.deleteMeal(meal);
-//        }
+        if (request.getParameter("action")!=null) {
+            String action = request.getParameter("action");
+            if (action.equalsIgnoreCase("delete")) {
+                int mealId = Integer.parseInt(request.getParameter("id"));
+                MealTo meal = mealDao.getMealById(mealId);
+                mealDao.deleteMeal(meal);
+            }
+            else if (action.equalsIgnoreCase("edit")) {
+                int mealId = Integer.parseInt(request.getParameter("id"));
+                MealTo meal = mealDao.getMealById(mealId);
+                mealDao.updateMeal();
+            }
+        }
+
+
 
         request.setAttribute("meals", mealDao.getAllMeals());
 
