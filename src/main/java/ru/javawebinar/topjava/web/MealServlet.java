@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -46,7 +48,7 @@ public class MealServlet extends HttpServlet {
             else if (action.equalsIgnoreCase("edit")) {
                 int mealId = Integer.parseInt(request.getParameter("id"));
                 MealTo meal = mealDao.getMealById(mealId);
-                mealDao.updateMeal();
+                mealDao.updateMeal(meal, 1);
             }
         }
 
@@ -56,5 +58,19 @@ public class MealServlet extends HttpServlet {
 
         request.getRequestDispatcher("meals.jsp").forward(request, response);
 //        response.sendRedirect("users.jsp");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        MealTo mealTo = new MealTo();
+
+        mealTo.setDateTime(LocalDateTime.parse(request.getParameter("mealDatetime")));
+        mealTo.setDescription(request.getParameter("mealDescription"));
+        mealTo.setCalories(Integer.parseInt(request.getParameter("mealCalories")));
+        mealDao.addMeal(mealTo);
+
+        request.setAttribute("meals", mealDao.getAllMeals());
+        request.getRequestDispatcher("meals.jsp").forward(request, response);
     }
 }

@@ -23,11 +23,11 @@ public class MealDaoImpl implements MealDao {
     );
 
     public final static int CALORIES_PER_DAY = 2000;
-    public static List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(0, 0), LocalTime.of(23, 50), CALORIES_PER_DAY);
+    public static List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(0, 0), LocalTime.of(23, 59), CALORIES_PER_DAY);
 
     @Override
-    public void addMeal() {
-
+    public void addMeal(MealTo mealTo) {
+        mealsTo.add(mealTo);
     }
 
     @Override
@@ -36,12 +36,13 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public void updateMeal() {
-
+    public void updateMeal(MealTo meal, Integer id) {
+        meal.getDateTime();
     }
 
     @Override
     public List<MealTo> getAllMeals() {
+
         Integer idCounter = 1;
         for (MealTo meals:mealsTo) {
             meals.setMealId(idCounter);
