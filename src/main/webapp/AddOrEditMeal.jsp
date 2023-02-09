@@ -13,13 +13,14 @@
 
 <br>
 <form method="post" action="${pageContext.request.contextPath}/MealServlet" name="formAddOrEditMeal">
+        <input type="hidden" name="mealId" value="<c:out value="${meal.mealId}"/> "/>
 DateTime: <input type="datetime-local" name="mealDatetime" value="<c:out value="${meal.dateTime}"/>"/>
 <br><br>
 Description:<input type="text" name="mealDescription" value="<c:out value="${meal.description}"/>"/>
 <br><br>
 Calories:<input type="number" name="mealCalories" value="<c:out value="${meal.calories}"/>" />
 <br><br>
-<input type="submit" value="Save">
+<input type="submit" value="Save"> <button onclick="window.history.back()" type="button">Cancel</button>
 </form>
 
 </body>

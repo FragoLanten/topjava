@@ -36,28 +36,31 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to users");
+
 
         if (request.getParameter("action")!=null) {
             String action = request.getParameter("action");
             if (action.equalsIgnoreCase("delete")) {
                 int mealId = Integer.parseInt(request.getParameter("id"));
-                MealTo meal = mealDao.getMealById(mealId);
-                mealDao.deleteMeal(meal);
+                MealTo mealTo = mealDao.getMealById(mealId);
+                mealDao.deleteMeal(mealTo);
+                request.setAttribute("meals", mealDao.getAllMeals());
+                response.sendRedirect("meals");
+                log.debug("redirect to meals");
             }
             else if (action.equalsIgnoreCase("edit")) {
                 int mealId = Integer.parseInt(request.getParameter("id"));
-                MealTo meal = mealDao.getMealById(mealId);
-                mealDao.updateMeal(meal, 1);
+                request.setAttribute("meal", mealDao.getMealById(mealId));
+                request.getRequestDispatcher("AddOrEditMeal.jsp").forward(request, response);
+                log.debug("redirect to EditMeal");
             }
         }
+        else {
+            request.setAttribute("meals", mealDao.getAllMeals());
+            request.getRequestDispatcher("meals.jsp").forward(request, response);
+            log.debug("redirect to meals");
+        }
 
-
-
-        request.setAttribute("meals", mealDao.getAllMeals());
-
-        request.getRequestDispatcher("meals.jsp").forward(request, response);
-//        response.sendRedirect("users.jsp");
     }
 
     @Override
@@ -68,9 +71,18 @@ public class MealServlet extends HttpServlet {
         mealTo.setDateTime(LocalDateTime.parse(request.getParameter("mealDatetime")));
         mealTo.setDescription(request.getParameter("mealDescription"));
         mealTo.setCalories(Integer.parseInt(request.getParameter("mealCalories")));
-        mealDao.addMeal(mealTo);
+        String stringId = request.getParameter("mealId").trim();
+
+        if (stringId.isEmpty()) {
+            mealDao.addMeal(mealTo);
+        }
+        else {
+            Integer mealId = Integer.parseInt(stringId);
+            mealDao.updateMeal(mealTo, mealId);
+        }
 
         request.setAttribute("meals", mealDao.getAllMeals());
         request.getRequestDispatcher("meals.jsp").forward(request, response);
+        log.debug("redirect to meals");
     }
 }

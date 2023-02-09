@@ -31,21 +31,28 @@ public class MealDaoImpl implements MealDao {
     }
 
     @Override
-    public void deleteMeal(MealTo meal) {
-        mealsTo.remove(meal);
+    public void deleteMeal(MealTo mealTo) {
+        mealsTo.remove(mealTo);
     }
 
     @Override
-    public void updateMeal(MealTo meal, Integer id) {
-        meal.getDateTime();
+    public void updateMeal(MealTo mealTo, Integer id) {
+        MealTo mealToRemove = null;
+        for (MealTo meal:mealsTo) {
+            if (meal.getMealId()==id) {
+                mealToRemove = meal;
+            }
+        }
+        mealsTo.remove(mealToRemove);
+        mealsTo.add(mealTo);
     }
 
     @Override
     public List<MealTo> getAllMeals() {
 
-        Integer idCounter = 1;
-        for (MealTo meals:mealsTo) {
-            meals.setMealId(idCounter);
+        Integer idCounter=1;
+        for (MealTo meal:mealsTo) {
+            meal.setMealId(idCounter);
             idCounter++;
         }
         return mealsTo;
